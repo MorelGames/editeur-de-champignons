@@ -3,6 +3,11 @@ import App from './App.vue'
 import './registerServiceWorker'
 import store from './store'
 
+import { Button, Dialog, Dropdown, Field, Input, Icon, Rate, Switch, Tag, Taginput } from 'buefy'
+import './sass/base.sass'
+
+[Button, Dialog, Dropdown, Field, Input, Icon, Rate, Switch, Tag, Taginput].forEach(p => Vue.use(p))
+
 Vue.config.productionTip = false
 
 new Vue({

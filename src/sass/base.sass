@@ -1,0 +1,133 @@
+@import "~bulma/sass/utilities/initial-variables"
+
+$primary: hsl(26, 83%, 26%)
+$link: hsl(25, 69%, 37%)
+$input-border-color: $primary
+$input-hover-border-color: $primary
+
+$section-padding: 1rem .6rem
+$section-padding-desktop: 1rem 1rem
+
+$rate-color: hsl(39, 11%, 69%)
+$rate-color-active: hsl(25, 69%, 37%)
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Grandstander:ital,wght@0,400;0,600;1,400;1,600&display=swap')
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css')
+
+\:root
+  // Fonts
+
+  --family-display: Grandstander, cursive
+  --family-sans: "Fira Sans", Avenir, Helvetica, Arial, sans-serif
+
+  // Color styles – Light
+
+  --color-light-earth-0: hsl(21, 100%, 95%)
+  --color-light-earth-50: hsl(21, 94%, 93%)
+  --color-light-earth-100: hsl(21, 92%, 90%)
+  --color-light-earth-150: hsl(21, 90%, 88%)
+  --color-light-earth-200: hsl(21, 87%, 85%)
+  --color-light-earth-300: hsl(22, 83%, 79%)
+  --color-light-earth-400: hsl(22, 77%, 73%)
+  --color-light-earth-500: hsl(23, 71%, 65%)
+  --color-light-earth-600: hsl(23, 62%, 57%)
+  --color-light-earth-700: hsl(25, 57%, 48%)
+  --color-light-earth-800: hsl(25, 69%, 37%)
+  --color-light-earth-900: hsl(26, 83%, 26%)
+  --color-light-earth-1000: hsl(27, 100%, 15%)
+
+  --color-light-brown-0: hsl(43, 100%, 96%)
+  --color-light-brown-50: hsl(44, 54%, 89%)
+  --color-light-brown-100: hsl(45, 46%, 82%)
+  --color-light-brown-150: hsl(44, 41%, 75%)
+  --color-light-brown-200: hsl(44, 38%, 68%)
+  --color-light-brown-300: hsl(45, 32%, 56%)
+  --color-light-brown-400: hsl(44, 31%, 46%)
+  --color-light-brown-500: hsl(45, 37%, 37%)
+  --color-light-brown-600: hsl(45, 42%, 29%)
+  --color-light-brown-700: hsl(45, 46%, 21%)
+  --color-light-brown-800: hsl(45, 49%, 14%)
+  --color-light-brown-900: hsl(44, 51%, 7%)
+  --color-light-brown-1000: hsl(30, 50%, 1%)
+
+  --color-light-green-0: hsl(83, 100%, 95%)
+  --color-light-green-50: hsl(89, 61%, 87%)
+  --color-light-green-100: hsl(97, 53%, 79%)
+  --color-light-green-150: hsl(102, 48%, 71%)
+  --color-light-green-200: hsl(108, 45%, 64%)
+  --color-light-green-300: hsl(119, 39%, 51%)
+  --color-light-green-400: hsl(128, 49%, 41%)
+  --color-light-green-500: hsl(135, 59%, 32%)
+  --color-light-green-600: hsl(140, 69%, 24%)
+  --color-light-green-700: hsl(144, 75%, 17%)
+  --color-light-green-800: hsl(148, 83%, 11%)
+  --color-light-green-900: hsl(148, 87%, 6%)
+  --color-light-green-1000: hsl(140, 100%, 1%)
+
+  // Color styles – Dark
+
+  --color-dark-earth-0: hsl(27, 100%, 15%)
+  --color-dark-earth-50: hsl(27, 91%, 23%)
+  --color-dark-earth-100: hsl(26, 83%, 31%)
+  --color-dark-earth-150: hsl(26, 76%, 36%)
+  --color-dark-earth-200: hsl(25, 69%, 42%)
+  --color-dark-earth-300: hsl(25, 57%, 48%)
+  --color-dark-earth-400: hsl(24, 56%, 55%)
+  --color-dark-earth-500: hsl(23, 58%, 61%)
+  --color-dark-earth-600: hsl(23, 60%, 67%)
+  --color-dark-earth-700: hsl(22, 62%, 74%)
+  --color-dark-earth-800: hsl(22, 65%, 81%)
+  --color-dark-earth-900: hsl(21, 74%, 88%)
+  --color-dark-earth-1000: hsl(21, 100%, 95%)
+
+  --color-dark-brown-0: hsl(30, 50%, 1%)
+  --color-dark-brown-50: hsl(48, 50%, 4%)
+  --color-dark-brown-100: hsl(43, 47%, 7%)
+  --color-dark-brown-150: hsl(46, 45%, 11%)
+  --color-dark-brown-200: hsl(45, 45%, 14%)
+  --color-dark-brown-300: hsl(46, 42%, 22%)
+  --color-dark-brown-400: hsl(44, 39%, 29%)
+  --color-dark-brown-500: hsl(45, 36%, 37%)
+  --color-dark-brown-600: hsl(45, 32%, 46%)
+  --color-dark-brown-700: hsl(45, 31%, 57%)
+  --color-dark-brown-800: hsl(44, 35%, 70%)
+  --color-dark-brown-900: hsl(44, 43%, 83%)
+  --color-dark-brown-1000: hsl(43, 100%, 96%)
+
+  --color-dark-green-0: hsl(140, 100%, 1%)
+  --color-dark-green-50: hsl(150, 88%, 3%)
+  --color-dark-green-100: hsl(146, 81%, 6%)
+  --color-dark-green-150: hsl(146, 78%, 9%)
+  --color-dark-green-200: hsl(143, 74%, 12%)
+  --color-dark-green-300: hsl(141, 70%, 18%)
+  --color-dark-green-400: hsl(137, 63%, 25%)
+  --color-dark-green-500: hsl(133, 56%, 32%)
+  --color-dark-green-600: hsl(128, 50%, 40%)
+  --color-dark-green-700: hsl(118, 38%, 52%)
+  --color-dark-green-800: hsl(104, 42%, 66%)
+  --color-dark-green-900: hsl(94, 49%, 81%)
+  --color-dark-green-1000: hsl(83, 100%, 95%)
+
+  // Color styles – Blacks, whites, and grays
+
+  --color-gray-000: hsl(40, 23%, 97%)
+  --color-gray-100: hsl(43, 13%, 90%)
+  --color-gray-200: hsl(40, 15%, 80%)
+  --color-gray-300: hsl(39, 11%, 69%)
+  --color-gray-400: hsl(41, 8%, 61%)
+  --color-gray-500: hsl(41, 8%, 48%)
+  --color-gray-600: hsl(41, 9%, 35%)
+  --color-gray-700: hsl(37, 11%, 28%)
+  --color-gray-800: hsl(40, 13%, 23%)
+  --color-gray-900: hsl(42, 15%, 13%)
+
+  --color-white: hsla(0, 0%, 98%, 1)
+  --color-black: hsla(0, 0%, 11%, 1)
+  --color-true-white: hsla(0, 0%, 100%, 1)
+  --color-true-black: hsla(0, 0%, 0%, 1)
+
+.control.is-display
+  font-family: var(--family-display)
+
+@import "~bulma"
+@import "~buefy/src/scss/buefy"
