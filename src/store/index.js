@@ -53,7 +53,16 @@ export default new Vuex.Store({
   },
   actions: {
     loadFromBrowser (context) {
-      context.commit('load', JSON.parse(localStorage.getItem('cdc-file')))
+      const local = localStorage.getItem('cdc-file')
+      if (!local) return
+
+      try {
+        context.commit('load', JSON.parse(local))
+      } catch (e) {
+        console.error('Unable to load file from local storage: JSON parsing error (did you tamper with the data?).', e)
+        console.info('Raw data in the local storage:')
+        console.info(local)
+      }
     },
     newQuestion (context) {
       context.commit('newQuestion')
