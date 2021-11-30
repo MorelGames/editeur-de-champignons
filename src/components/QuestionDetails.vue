@@ -100,6 +100,7 @@
                  placeholder="Écrivez la question ici…"
                  class="is-display"
                  size="is-medium"
+                 icon-right="language-markdown"
                  v-model="question.question.text"
                  @input="update"
                  ref="questionInput"
@@ -167,7 +168,7 @@
             <header class="titles">
               <h3 class="title is-5">Question</h3>
               <p class="subtitle is-6">
-                Contenu affiché lorsque la question est posée, pour donner du contexte supplémentaire.
+                Contenu affiché lorsque la question est posée, pour donner du contexte supplémentaire si nécessaire.
                 La réponse ne doit pas être donnée ici.
               </p>
             </header>
