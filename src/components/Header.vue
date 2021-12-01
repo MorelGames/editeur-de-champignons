@@ -4,11 +4,19 @@
     <aside>
       <div class="buttons">
         <b-button type="is-primary is-light" size="is-small" rounded>Importer</b-button>
-        <b-button type="is-primary" size="is-small" rounded>Exporter</b-button>
+        <b-button type="is-primary" size="is-small" rounded @click="exportQuestions">Exporter</b-button>
       </div>
     </aside>
   </header>
 </template>
+
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+  methods: mapActions(['exportQuestions'])
+}
+</script>
 
 <style lang="sass">
   header.header

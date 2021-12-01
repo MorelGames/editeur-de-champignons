@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import { saveAs } from 'file-saver'
 import { v4 } from 'uuid'
 
 Vue.use(Vuex)
@@ -75,6 +77,15 @@ export default new Vuex.Store({
     deleteQuestion (context, uuid) {
       context.commit('deleteQuestion', uuid)
       persist(context.state)
+    },
+
+    exportQuestions ({ state }) {
+      const blob = new Blob(
+        [JSON.stringify(state.file)],
+        { type: 'application/json;charset=utf-8' }
+      )
+
+      saveAs(blob, 'questions.json')
     }
   },
   modules: {
