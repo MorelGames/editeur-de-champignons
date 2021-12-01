@@ -313,7 +313,6 @@ export default {
 
 <style lang="sass">
 article.question-content-editor
-  margin-top: 1rem
   padding: 1rem
 
   border-radius: 6px

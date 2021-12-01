@@ -179,11 +179,82 @@
 
         <div class="column is-half">
           <section class="section">
+            <div class="titles-with-button">
+              <header class="titles">
+                <h3 class="title is-5">Réponse</h3>
+                <p class="subtitle is-6">
+                  Quelle est la bonne réponse à la question ?
+                </p>
+              </header>
+              <b-button v-if="question.answer.type === 'qcm'"
+                        @click="addQCMOption"
+                        type="is-primary"
+                        rounded
+                        icon-left="plus">
+                Réponse
+              </b-button>
+            </div>
+
+            <template v-if="question.answer.type === 'text'">
+              <b-field message="Pour les questions textuelles, entrez le texte de la réponse. La correction sera manuelle, et sera pré-faite en normalisant la réponse pour la comparer à ce qui a été entré par les participant⋅e⋅s.">
+                <b-input v-model="question.answer.answer" @input="update" placeholder="Entrez la réponse ici…" />
+              </b-field>
+            </template>
+
+            <div v-else-if="question.answer.type === 'qcm'" ref="answerOptions">
+              <b-field>
+                Indiquez toutes les propositions de réponse, et cochez la ou les bonnes réponses. L'ordre n'a pas
+                d'importance : les réponses seront affichées mélangées.
+              </b-field>
+              <b-field v-for="(option, i) in question.answer.options" :key="i" grouped>
+                <b-checkbox v-model="option.valid" @input="update" />
+                <b-input v-model="option.answer"
+                         @input="update"
+                         @keyup.enter.native="addQCMOption"
+                         @keyup.delete.native="deleteQCMOptionIfEmpty(i, $event)"
+                         placeholder="Entrez la réponse ici…"
+                         expanded
+                />
+                <b-button @click="deleteQCMOptionConfirmation(i, $event)"
+                          v-if="question.answer.options.length > 1"
+                          type="is-ghost"
+                          title="Supprimer">
+                  <b-icon icon="delete" />
+                </b-button>
+              </b-field>
+              <b-field>
+                <b-switch v-model="question.answer.as_text" @input="update">
+                  Proposer également cette question sans les propositions<br />
+                  <small>
+                    Si activé, cette question pourra être proposée sans les réponses, tel une question textuelle.
+                    La correction utilisera la bonne réponse ci-dessous.
+                  </small>
+                </b-switch>
+              </b-field>
+            </div>
+
+            <template v-else-if="question.answer.type === 'geo'">
+              <em>Pas encore disponible</em>
+            </template>
+
+            <div v-else-if="question.answer.type === 'drawing'" class="content">
+              <p class="no-answer">
+                Il n'y a aucune réponse à configurer pour les questions dont la réponse est un dessin : nous n'analysons
+                pas automatiquement les dessins pour corriger ; la réponse est faite à la main.
+              </p>
+              <p class="no-answer">
+                <strong>Cependant</strong>, n'oubliez pas de donner une référence de correction (par exemple, une image)
+                dans les explications ci-dessous !
+              </p>
+            </div>
+          </section>
+
+          <section class="section">
             <header class="titles">
-              <h3 class="title is-5">Réponse</h3>
+              <h3 class="title is-5">Explications</h3>
               <p class="subtitle is-6">
-                Options de réponse et éléments de détail pour expliquer la question
-                et donner un peu de culture au passage !
+                Quelques éléments pour donner des détails sur la réponse, afin que les joueurs quittent la partie avec
+                un peu de culture générale en plus !
               </p>
             </header>
 
@@ -238,6 +309,70 @@ export default {
       this.updateQuestion({ uuid: this.current_uuid, question: this.question })
     },
 
+    focusLastQCMOption () {
+      if (this.$refs.answerOptions) {
+        this.$nextTick(() => {
+          const nodes = this.$refs.answerOptions.querySelectorAll('input[type=text]')
+          if (nodes) {
+            nodes[nodes.length - 1].focus()
+          }
+        })
+      }
+    },
+
+    addQCMOption () {
+      if (!this.question.answer.options) {
+        this.$set(this.question.answer, 'options', [])
+      }
+
+      this.question.answer.options.push({
+        answer: '', valid: false, __removable: true
+      })
+
+      this.update()
+      this.focusLastQCMOption()
+    },
+
+    deleteQCMOptionIfEmpty (index, e) {
+      if (!this.question.answer.options || !this.question.answer.options[index]) return
+
+      if (!this.question.answer.options[index].answer) {
+        if (this.question.answer.options[index].__removable && this.question.answer.options.length > 1) {
+          this.deleteQCMOption(index)
+          this.focusLastQCMOption()
+        } else {
+          this.question.answer.options[index].__removable = true
+        }
+      } else {
+        this.question.answer.options[index].__removable = false
+      }
+    },
+
+    deleteQCMOptionConfirmation (index, e) {
+      // Ctrl+click skips the confirmation
+      if (e.ctrlKey) {
+        this.deleteQCMOption(index)
+        return
+      }
+
+      this.$buefy.dialog.confirm({
+        title: 'Supprimer cette question ?',
+        message: `Vous supprimez l'option de réponse «&nbsp;<strong>${this.question.answer.options[index].answer}</strong>&nbsp;».<br /><br />
+        <small>Astuce : cliquer le bouton de suppression en pressant Ctrl supprime directement la question sans confirmation.</small>`,
+        type: 'is-danger',
+        confirmText: 'Supprimer cette option',
+        cancelText: 'Annuler',
+        ariaRole: 'dialog',
+        ariaModal: true,
+        onConfirm: () => this.deleteQCMOption(index)
+      })
+    },
+
+    deleteQCMOption (index) {
+      this.question.answer.options.splice(index, 1)
+      this.update()
+    },
+
     deleteQuestionConfirmation (e) {
       // Ctrl+click skips the confirmation
       if (e.ctrlKey) {
@@ -261,6 +396,10 @@ export default {
 
   watch: {
     question () {
+      if (!this.question.answer.options) {
+        this.$set(this.question.answer, 'options', [])
+      }
+
       this.$nextTick(() => {
         if (this.question && this.$refs.questionInput) {
           this.$refs.questionInput.focus()
@@ -303,6 +442,19 @@ article.question-editor
 
     &:not(:last-child)
       margin-bottom: 1rem
+
+    .titles
+      margin-bottom: 1rem
+
+    .titles-with-button
+      display: flex
+      flex-direction: row
+
+      .titles
+        flex: 10
+
+  p.no-answer
+    font-style: italic
 
 .no-question-selected
   display: flex

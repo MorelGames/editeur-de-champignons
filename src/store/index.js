@@ -37,6 +37,10 @@ export default new Vuex.Store({
         answer: {
           type: 'qcm',
           answer: '',
+          options: [
+            { answer: '', valid: false, __removable: true }
+          ],
+          as_text: true,
           content: [],
           sources: []
         }

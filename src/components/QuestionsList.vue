@@ -2,7 +2,8 @@
   <nav>
     <header>
       <h2>{{ Object.keys(file).length }} question{{ Object.keys(file).length > 1 ? 's' : '' }}</h2>
-      <b-button type="is-primary" size="is-small" rounded @click="newQuestion" title="Ctrl + E">Ajouter une question</b-button>
+      <b-button type="is-link" size="is-small" rounded disabled icon-left="magnify"></b-button>
+      <b-button type="is-primary" size="is-small" rounded icon-left="plus" @click="newQuestion" title="Ctrl + E">Question</b-button>
     </header>
 
     <ul class="questions-list">
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import markdown from '../md'
 
 export default {
@@ -39,7 +40,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['selectQuestion', 'newQuestion']),
+    ...mapMutations(['selectQuestion']),
+    ...mapActions(['newQuestion']),
 
     mdInline (str) {
       return markdown.renderInline(str)
@@ -72,7 +74,10 @@ nav
       font-size: 1.2rem
 
     button
-      margin-right: 0
+      margin-right: .4rem
+
+      &:last-child
+        margin-right: 0
 
   > ul.questions-list
     margin: 0
