@@ -15,14 +15,18 @@
         <h3 :class="{'is-empty': !question.question.text}" v-html="mdInline(question.question.text || 'Question vide')"></h3>
         <ul class="meta">
           <li>
-            <span v-if="question.answer.type === 'text'">Texte</span>
-            <span v-else-if="question.answer.type === 'qcm'">QCM</span>
-            <span v-else-if="question.answer.type === 'geo'">Carte</span>
-            <span v-else-if="question.answer.type === 'drawing'">Dessin</span>
+            <b-icon size="is-small" icon="lead-pencil" title="Texte" v-if="question.answer.type === 'text'"/>
+            <b-icon size="is-small" icon="format-list-bulleted-square" title="QCM" v-else-if="question.answer.type === 'qcm'"/>
+            <b-icon size="is-small" icon="map" title="Carte" v-else-if="question.answer.type === 'geo'"/>
+            <b-icon size="is-small" icon="draw" title="Dessin" v-else-if="question.answer.type === 'drawing'"/>
             <span v-else>{{ question.answer.type }}</span>
           </li>
           <li v-if="question.categories.length > 0">{{ question.categories[0] }}</li>
           <li v-if="question.nsfw">NSFW</li>
+          <li v-if="question.question.text && (question.categories.length === 0 || ((question.answer.type === 'text' && !question.answer.answer) || (question.answer.type === 'qcm' && (!question.answer.options || question.answer.options.length < 2))))"
+              title="Un ou plusieurs éléments manquent (catégories ou réponses).">
+            <b-icon size="is-small" icon="alert-circle"></b-icon>
+          </li>
         </ul>
       </li>
     </ul>

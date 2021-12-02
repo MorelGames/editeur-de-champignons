@@ -117,10 +117,9 @@
                         @input="update"
                         autocomplete
                         :data="known_categories_filtered"
-                        :keep-first="true"
                         :allow-new="true"
                         @typing="filterKnownCategories"
-                        placeholder="Nouvelle catégorie"
+                        :placeholder="question.categories.length === 0 ? 'Nouvelle catégorie…' : 'Ajouter une autre catégorie…'"
                         aria-close-label="Supprimer cette catégorie"
                         ref="tagInputCategories"
             >
