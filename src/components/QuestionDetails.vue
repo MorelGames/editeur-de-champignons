@@ -166,6 +166,18 @@
 
             <QuestionContent :uuid="current_uuid" path="question" />
           </section>
+          <section class="section">
+            <header class="titles">
+              <h3 class="title is-5">Sources</h3>
+              <p class="subtitle is-6">
+                Précisez ici les sources de la question, pour permettre aux joueurs⋅euses d'approfondir le sujet.
+              </p>
+            </header>
+
+            <b-field :message="['Chaque ligne sera affichée comme une source séparée, dans une liste. Markdown est supporté, ligne par ligne.', 'Les sources ne sont affichées que pendant la phase de correction, donc vous pouvez y révéler la réponse.']">
+              <b-input type="textarea" v-model="sources" />
+            </b-field>
+          </section>
         </div>
 
         <div class="column is-half">
@@ -286,7 +298,17 @@ export default {
       current_uuid: state => state.current,
       question: state => state.file[state.current],
       known_categories: state => Object.values(state.file).map(question => question.categories).flat()
-    })
+    }),
+
+    sources: {
+      get () {
+        return this.question.answer.sources.join('\n')
+      },
+      set (value) {
+        this.question.answer.sources = value.split('\n')
+        this.update()
+      }
+    }
   },
 
   methods: {
