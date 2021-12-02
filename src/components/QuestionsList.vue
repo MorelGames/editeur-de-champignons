@@ -22,7 +22,6 @@
             <span v-else>{{ question.answer.type }}</span>
           </li>
           <li v-if="question.categories.length > 0">{{ question.categories[0] }}</li>
-          <li>{{ ['Très facile', 'Facile', 'Moyen', 'Difficile', 'Très difficile'][question.difficulty - 1] }}</li>
           <li v-if="question.nsfw">NSFW</li>
         </ul>
       </li>

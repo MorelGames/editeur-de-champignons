@@ -112,15 +112,7 @@
 
       <section class="section">
         <div class="level-single is-spaced">
-          <b-field label="Difficulté de la question">
-            <b-rate v-model="question.difficulty"
-                    @input="update"
-                    icon="thought-bubble"
-                    size="is-medium"
-            />
-          </b-field>
-
-          <b-field label="Catégories" :message="['La première catégorie est la principale ; elle sera affichée en jeu.', 'Les autres filtrent les questions.']">
+          <b-field label="Catégories" :message="['La première catégorie est la principale ; elle sera affichée en jeu.', 'Les autres filtrent les questions.']" class="level-main">
             <b-taginput v-model="question.categories"
                         @input="update"
                         autocomplete
@@ -435,6 +427,9 @@ article.question-editor
 
     .field:not(:first-child)
       margin-left: 1.5rem
+
+    .field.level-main
+      flex: 10
 
   section.section
     background-color: var(--color-light-earth-0)

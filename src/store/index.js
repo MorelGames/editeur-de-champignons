@@ -26,7 +26,6 @@ export default new Vuex.Store({
       const uuid = v4()
       const question = {
         lang: 'fr',
-        difficulty: 1,
         nsfw: false,
         categories: [],
         duration: undefined,
