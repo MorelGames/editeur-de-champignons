@@ -2,12 +2,19 @@
   <nav>
     <header>
       <h2>{{ Object.keys(file).length }} question{{ Object.keys(file).length > 1 ? 's' : '' }}</h2>
-      <b-button type="is-link" size="is-small" rounded disabled icon-left="magnify"></b-button>
+      <b-button :type="search ? 'is-primary' : 'is-link'" size="is-small" rounded icon-left="magnify" @click="search = !search"></b-button>
       <b-button type="is-primary" size="is-small" rounded icon-left="plus" @click="newQuestion" title="Ctrl + E">Question</b-button>
+    </header>
+    <header class="search" v-show="search">
+      <input type="text"
+             placeholder="Rechercher…"
+             v-model="search_term"
+             @keyup.esc="search = false"
+             ref="searchField" />
     </header>
 
     <ul class="questions-list">
-      <li v-for="(question, uuid) in file"
+      <li v-for="(question, uuid) in questions"
           :key="uuid"
           @click="selectQuestion(uuid)"
           :class="{'is-active': uuid === current}"
@@ -38,8 +45,49 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import markdown from '../md'
 
 export default {
+  data () {
+    return {
+      search: false,
+      search_term: ''
+    }
+  },
   computed: {
-    ...mapState(['file', 'current'])
+    ...mapState(['file', 'current']),
+
+    questions () {
+      if (!this.search) return this.file
+
+      const term = this.search_term.toLowerCase()
+      return Object.fromEntries(Object.entries(this.file).filter(([uuid, question]) => {
+        if (question.question.text.toLowerCase().indexOf(term) !== -1) return true
+
+        for (const category of question.categories) {
+          if (category.toLowerCase().indexOf(term) !== -1) return true
+        }
+
+        if (question.answer.answer && question.answer.answer.toLowerCase().indexOf(term) !== -1) return true
+
+        for (const option of Object.values(question.answer.options || {})) {
+          if (option.answer.toLowerCase().indexOf(term) !== -1) return true
+        }
+
+        for (const source of question.answer.sources) {
+          if (source.toLowerCase().indexOf(term) !== -1) return true
+        }
+
+        for (const contentType of ['question', 'answer']) {
+          for (const content of question[contentType].content) {
+            for (const field of ['text', 'alt', 'caption', 'copyright']) {
+              if (Object.prototype.hasOwnProperty.call(content, field) && content[field].toLowerCase().indexOf(term) !== -1) {
+                return true
+              }
+            }
+          }
+        }
+
+        return false
+      }))
+    }
   },
 
   methods: {
@@ -48,6 +96,14 @@ export default {
 
     mdInline (str) {
       return markdown.renderInline(str)
+    }
+  },
+
+  watch: {
+    search () {
+      if (this.search && this.$refs.searchField) {
+        this.$nextTick(() => this.$refs.searchField.focus())
+      }
     }
   }
 }
@@ -81,6 +137,19 @@ nav
 
       &:last-child
         margin-right: 0
+
+    &.search
+      padding: 0
+
+      input[type=text]
+        display: block
+        width: 100%
+        height: 100%
+        padding: 1rem .4rem 1rem .6rem
+        border: none
+
+        &:focus
+          outline: var(--color-light-earth-600) solid .2rem
 
   > ul.questions-list
     margin: 0
