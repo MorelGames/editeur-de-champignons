@@ -48,6 +48,9 @@ export default {
 *
   box-sizing: border-box
 
+html
+  overflow-y: hidden !important
+
 html, body, #app
   margin: 0
   padding: 0
