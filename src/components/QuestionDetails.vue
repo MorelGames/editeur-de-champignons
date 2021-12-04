@@ -175,7 +175,7 @@
             </header>
 
             <b-field :message="['Chaque ligne sera affichée comme une source séparée, dans une liste. Markdown est supporté, ligne par ligne.', 'Les sources ne sont affichées que pendant la phase de correction, donc vous pouvez y révéler la réponse.']">
-              <b-input type="textarea" v-model="sources" />
+              <b-input type="textarea" v-model="sources" icon-right="language-markdown" />
             </b-field>
           </section>
         </div>
