@@ -297,7 +297,7 @@ export default {
     ...mapState({
       current_uuid: state => state.current,
       question: state => state.file[state.current],
-      known_categories: state => Object.values(state.file).map(question => question.categories).flat()
+      known_categories: state => [...new Set(Object.values(state.file).map(question => question.categories).flat())]
     }),
 
     sources: {
