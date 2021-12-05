@@ -1,6 +1,9 @@
 <template>
   <article class="question-content-editor">
-    <div class="empty" v-if="content.length === 0">Contenu vide. Vous pouvez ajouter un élément ci-dessous !</div>
+    <div class="empty" v-if="content.length === 0">
+      Contenu vide.
+      <span v-if="!preview">Vous pouvez ajouter un élément ci-dessous !</span>
+    </div>
 
     <div class="question-content-item media" v-for="(item, i) in content" :key="i">
       <div class="media-left">
@@ -127,7 +130,7 @@
       </div>
     </div>
 
-    <footer>
+    <footer v-if="!preview">
       <div class="button-with-icon">
         <b-icon icon="plus" size="is-medium"></b-icon>
         <span>Ajouter</span>
