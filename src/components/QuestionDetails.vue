@@ -107,7 +107,7 @@
                  spellcheck="true"
                  v-if="!preview"
         />
-        <p class="question-preview is-size-4" v-else v-html="mdInline(question.question.text)"/>
+        <p class="question-preview is-size-4 is-family-display" v-else v-html="mdInline(question.question.text)"/>
 
         <a @click="deleteQuestionConfirmation"><b-icon icon="delete" size="is-medium" /></a>
       </div>
