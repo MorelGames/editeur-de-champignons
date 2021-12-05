@@ -58,7 +58,7 @@
       <div class="media-content" v-else-if="['picture', 'movie', 'sound'].indexOf(item.type) >= 0">
         <div class="content" v-if="preview">
           <figure v-if="item.type === 'picture' && item.__selected_input_source === 'name'">
-            <img :src="item.name" alt="item.alt" />
+            <img :src="item.name" :alt="item.alt" />
             <figcaption v-html="mdInline(item.caption)"></figcaption>
           </figure>
           <p v-else><em>Prévisualisation non supportée actuellement.</em></p>
