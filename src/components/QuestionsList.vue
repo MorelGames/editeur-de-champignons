@@ -34,6 +34,10 @@
               title="Un ou plusieurs éléments manquent (catégories ou réponses).">
             <b-icon size="is-small" icon="alert-circle"></b-icon>
           </li>
+          <li v-if="question.question.text && question.answer.sources.length === 0 && question.answer.content.length === 0"
+              title="Cette question n'a ni explications, ni sources.">
+            <b-icon size="is-small" icon="school"></b-icon>
+          </li>
         </ul>
       </li>
     </ul>
