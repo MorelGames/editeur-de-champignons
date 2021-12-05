@@ -174,7 +174,8 @@
               </p>
             </header>
 
-            <b-field :message="['Chaque ligne sera affichée comme une source séparée, dans une liste. Markdown est supporté, ligne par ligne.', 'Les sources ne sont affichées que pendant la phase de correction, donc vous pouvez y révéler la réponse.']">
+            <div class="content" v-if="preview" v-html="md(sources)"></div>
+            <b-field v-else :message="['Chaque ligne sera affichée comme une source séparée, dans une liste. Markdown est supporté, ligne par ligne.', 'Les sources ne sont affichées que pendant la phase de correction, donc vous pouvez y révéler la réponse.']">
               <b-input type="textarea" v-model="sources" icon-right="language-markdown" />
             </b-field>
           </section>
@@ -280,6 +281,7 @@
 
 <script>
 import QuestionContent from './QuestionContent'
+import markdown from '../md'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -297,7 +299,8 @@ export default {
     ...mapState({
       current_uuid: state => state.current,
       question: state => state.file[state.current],
-      known_categories: state => [...new Set(Object.values(state.file).map(question => question.categories).flat())]
+      known_categories: state => [...new Set(Object.values(state.file).map(question => question.categories).flat())],
+      preview: state => state.preview
     }),
 
     sources: {
@@ -404,6 +407,10 @@ export default {
         ariaModal: true,
         onConfirm: () => this.deleteQuestion(this.current_uuid)
       })
+    },
+
+    md (str) {
+      return markdown.render(str)
     }
   },
 

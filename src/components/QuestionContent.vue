@@ -12,7 +12,9 @@
       </div>
 
       <div class="media-content" v-if="item.type === 'text'">
+        <div class="content" v-if="preview" v-html="md(item.text)"></div>
         <b-input type="textarea"
+                 v-else
                  v-model="item.text"
                  @input="update"
                  placeholder="Entrez le texte ici. Markdown est supporté."
@@ -22,84 +24,102 @@
       </div>
 
       <div class="media-content" v-else-if="item.type === 'quote'">
-        <b-field>
-          <b-input type="textarea"
-                   v-model="item.text"
-                   @input="update"
-                   placeholder="Entrez la citation ici. Markdown est supporté."
-                   icon-right="language-markdown"
-                   rows="2"
-          />
-        </b-field>
-        <b-field>
-          <b-input type="text"
-                   v-model="item.author"
-                   @input="update"
-                   placeholder="Auteur de la citation (facultatif)"
-                   icon="fountain-pen-tip"
-                   icon-right="language-markdown"
-          />
-        </b-field>
+        <div class="content" v-if="preview">
+          <blockquote>
+            <div v-html="md(item.text)" />
+            <p v-if="item.author">— <em v-html="mdInline(item.author)" /></p>
+          </blockquote>
+        </div>
+        <template v-else>
+          <b-field>
+            <b-input type="textarea"
+                     v-model="item.text"
+                     @input="update"
+                     placeholder="Entrez la citation ici. Markdown est supporté."
+                     icon-right="language-markdown"
+                     rows="2"
+            />
+          </b-field>
+          <b-field>
+            <b-input type="text"
+                     v-model="item.author"
+                     @input="update"
+                     placeholder="Auteur de la citation (facultatif)"
+                     icon="fountain-pen-tip"
+                     icon-right="language-markdown"
+            />
+          </b-field>
+        </template>
       </div>
 
       <div class="media-content" v-else-if="['picture', 'movie', 'sound'].indexOf(item.type) >= 0">
-        <div v-if="item.type === 'picture'">
-          <b-field message="Pour un nom de fichier, le fichier devra être placé dans un sous-dossier “assets”." v-if="item.type === 'picture'">
-            <b-input type="text"
-                     v-model="item.name"
-                     @input="update"
-                     placeholder="URL ou nom du fichier de l'image"
-                     icon="link"
-            />
-          </b-field>
+        <div class="content" v-if="preview">
+          <figure v-if="item.type === 'picture' && item.__selected_input_source === 'name'">
+            <img :src="item.name" alt="item.alt" />
+            <figcaption v-html="mdInline(item.caption)"></figcaption>
+          </figure>
+          <p v-else><em>Prévisualisation non supportée actuellement.</em></p>
         </div>
-        <div v-else class="field">
+
+        <template v-else>
+          <div v-if="item.type === 'picture'">
+            <b-field message="Pour un nom de fichier, le fichier devra être placé dans un sous-dossier “assets”." v-if="item.type === 'picture'">
+              <b-input type="text"
+                       v-model="item.name"
+                       @input="update"
+                       placeholder="URL ou nom du fichier de l'image"
+                       icon="link"
+              />
+            </b-field>
+          </div>
+          <div v-else class="field">
+            <b-field>
+              <b-select v-model="item.__selected_input_source">
+                <option v-for="option in itemInputTypes(item.type)" :value="option[0]" :key="option[0]">{{ option[1] }}</option>
+              </b-select>
+
+              <b-input type="text"
+                       v-model="item[item.__selected_input_source || 'name']"
+                       @input="update"
+                       :placeholder="itemInputType(item.type, item.__selected_input_source)[2]"
+                       expanded
+              />
+            </b-field>
+          </div>
+
           <b-field>
-            <b-select v-model="item.__selected_input_source">
-              <option v-for="option in itemInputTypes(item.type)" :value="option[0]" :key="option[0]">{{ option[1] }}</option>
-            </b-select>
-
             <b-input type="text"
-                     v-model="item[item.__selected_input_source || 'name']"
+                     v-model="item.alt"
                      @input="update"
-                     :placeholder="itemInputType(item.type, item.__selected_input_source)[2]"
-                     expanded
+                     placeholder="Texte alternatif (requis, si possible)"
+                     icon="eye-off"
             />
           </b-field>
-        </div>
-
-        <b-field>
-          <b-input type="text"
-                   v-model="item.alt"
-                   @input="update"
-                   placeholder="Texte alternatif (requis, si possible)"
-                   icon="eye-off"
-          />
-        </b-field>
-        <b-field>
-          <b-input type="text"
-                   v-model="item.caption"
-                   @input="update"
-                   placeholder="Légende (facultatif)"
-                   icon="image-text"
-                   icon-right="language-markdown"
-          />
-        </b-field>
-        <b-field>
-          <b-input type="text"
-                   v-model="item.copyright"
-                   @input="update"
-                   placeholder="Copyright"
-                   icon="copyright"
-                   icon-right="language-markdown"
-          />
-        </b-field>
-        <b-field v-if="path !== 'answer'">
-          <b-switch v-model="item.hide_copyright" @input="update">
-            Masquer le copyright pendant la question<br />
-            <small>À utiliser si le copyright révèle la réponse. Le copyright sera affiché avec la réponse.</small>
-          </b-switch>
-        </b-field>
+          <b-field>
+            <b-input type="text"
+                     v-model="item.caption"
+                     @input="update"
+                     placeholder="Légende (facultatif)"
+                     icon="image-text"
+                     icon-right="language-markdown"
+            />
+          </b-field>
+          <b-field>
+            <b-input type="text"
+                     v-model="item.copyright"
+                     @input="update"
+                     placeholder="Copyright"
+                     icon="copyright"
+                     icon-right="language-markdown"
+            />
+          </b-field>
+          <b-field v-if="path !== 'answer'">
+            <b-switch v-model="item.hide_copyright" @input="update">
+              Masquer le copyright pendant la question<br />
+              <small>À utiliser si le copyright révèle la réponse. Le copyright sera affiché avec la réponse.</small>
+            </b-switch>
+          </b-field>
+        </template>
       </div>
 
       <div class="media-right">
@@ -142,7 +162,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import markdown from '../md'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
@@ -151,6 +172,7 @@ export default {
   },
 
   computed: {
+    ...mapState(['preview']),
     content () {
       return this.$store.state.file[this.uuid][this.path].content
     }
@@ -296,6 +318,14 @@ export default {
       }
 
       this.update()
+    },
+
+    md (str) {
+      return markdown.render(str)
+    },
+
+    mdInline (str) {
+      return markdown.renderInline(str)
     }
   },
 

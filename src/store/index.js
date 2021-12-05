@@ -32,7 +32,8 @@ function persist (state) {
 export default new Vuex.Store({
   state: {
     file: {},
-    current: undefined
+    current: undefined,
+    preview: false
   },
   mutations: {
     load (state, file) {
@@ -73,6 +74,9 @@ export default new Vuex.Store({
     deleteQuestion (state, uuid) {
       Vue.delete(state.file, uuid)
       state.current = undefined
+    },
+    togglePreview (state, preview) {
+      state.preview = preview
     }
   },
   actions: {
