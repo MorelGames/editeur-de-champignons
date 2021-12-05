@@ -112,49 +112,6 @@
         <a @click="deleteQuestionConfirmation"><b-icon icon="delete" size="is-medium" /></a>
       </div>
 
-      <section class="section">
-        <div class="level-single is-spaced">
-          <b-field label="Catégories" :message="['La première catégorie est la principale ; elle sera affichée en jeu.', 'Les autres filtrent les questions.']" class="level-main">
-            <b-taginput v-model="question.categories"
-                        @input="update"
-                        autocomplete
-                        :data="known_categories_filtered"
-                        :allow-new="true"
-                        @typing="filterKnownCategories"
-                        :placeholder="question.categories.length === 0 ? 'Nouvelle catégorie…' : 'Ajouter une autre catégorie…'"
-                        aria-close-label="Supprimer cette catégorie"
-                        ref="tagInputCategories"
-            >
-              <template #selected="props">
-                <b-tag
-                  v-for="(tag, index) in props.tags"
-                  :key="index"
-                  :type="index === 0 ? 'is-primary' : 'is-link'"
-                  :tabstop="false"
-                  closable
-                  @close="$refs.tagInputCategories.removeTag(index, $event)">
-                  {{ tag }}
-                </b-tag>
-              </template>
-            </b-taginput>
-          </b-field>
-
-          <b-field label="Durée" :message="['Temps laissé pour répondre, en secondes.', 'La valeur par défaut dépend du type de question.']">
-            <b-input v-model="question.duration" @input="update" type="number" icon-right="alpha-s" />
-          </b-field>
-
-          <b-field label="Langue">
-            <b-input v-model="question.lang" @input="update" />
-          </b-field>
-
-          <b-field label="Public cible" message="Les questions 18+ sont filtrables.">
-            <b-switch v-model="question.nsfw" @input="update">
-              <abbr title="Not Safe for Work (déconseillé aux jeunes, pour le travail, etc.)">NSFW</abbr>
-            </b-switch>
-          </b-field>
-        </div>
-      </section>
-
       <div class="columns">
         <div class="column is-half">
           <section class="section">
@@ -168,6 +125,7 @@
 
             <QuestionContent :uuid="current_uuid" path="question" />
           </section>
+
           <section class="section">
             <header class="titles">
               <h3 class="title is-5">Sources</h3>
@@ -178,8 +136,58 @@
 
             <div class="content" v-if="preview" v-html="md(sources)"></div>
             <b-field v-else :message="['Chaque ligne sera affichée comme une source séparée, dans une liste. Markdown est supporté, ligne par ligne.', 'Les sources ne sont affichées que pendant la phase de correction, donc vous pouvez y révéler la réponse.']">
-              <b-input type="textarea" v-model="sources" icon-right="language-markdown" />
+              <b-input type="textarea" v-model="sources" icon-right="language-markdown" rows="2" />
             </b-field>
+          </section>
+
+          <section class="section">
+            <header class="titles">
+              <h3 class="title is-5">Métadonnées</h3>
+              <p class="subtitle is-6">
+                Comment classer et afficher cette question ?
+              </p>
+            </header>
+
+            <b-field label="Catégories" message="La première catégorie est la principale ; elle sera affichée en jeu. Les autres filtrent les questions." class="level-main">
+              <b-taginput v-model="question.categories"
+                          @input="update"
+                          autocomplete
+                          :data="known_categories_filtered"
+                          :allow-new="true"
+                          @typing="filterKnownCategories"
+                          :placeholder="question.categories.length === 0 ? 'Nouvelle catégorie…' : 'Ajouter une autre catégorie…'"
+                          aria-close-label="Supprimer cette catégorie"
+                          ref="tagInputCategories"
+              >
+                <template #selected="props">
+                  <b-tag
+                    v-for="(tag, index) in props.tags"
+                    :key="index"
+                    :type="index === 0 ? 'is-primary' : 'is-link'"
+                    :tabstop="false"
+                    closable
+                    @close="$refs.tagInputCategories.removeTag(index, $event)">
+                    {{ tag }}
+                  </b-tag>
+                </template>
+              </b-taginput>
+            </b-field>
+
+            <div class="level-single is-spaced">
+              <b-field label="Durée" :message="['Temps laissé pour répondre, en secondes.', 'La valeur par défaut dépend du type de question.']">
+                <b-input v-model="question.duration" @input="update" type="number" icon-right="alpha-s" />
+              </b-field>
+
+              <b-field label="Langue">
+                <b-input v-model="question.lang" @input="update" />
+              </b-field>
+
+              <b-field label="Public cible" message="Les questions 18+ sont filtrables.">
+                <b-switch v-model="question.nsfw" @input="update">
+                  <abbr title="Not Safe for Work (déconseillé aux jeunes, pour le travail, etc.)">NSFW</abbr>
+                </b-switch>
+              </b-field>
+            </div>
           </section>
         </div>
 
