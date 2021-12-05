@@ -141,13 +141,6 @@
           </section>
 
           <section class="section">
-            <header class="titles">
-              <h3 class="title is-5">Métadonnées</h3>
-              <p class="subtitle is-6">
-                Comment classer et afficher cette question ?
-              </p>
-            </header>
-
             <b-field label="Catégories" message="La première catégorie est la principale ; elle sera affichée en jeu. Les autres filtrent les questions." class="level-main">
               <b-taginput v-model="question.categories"
                           @input="update"
