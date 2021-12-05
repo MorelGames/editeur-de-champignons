@@ -105,7 +105,9 @@
                  @input="update"
                  ref="questionInput"
                  spellcheck="true"
+                 v-if="!preview"
         />
+        <p class="question-preview is-size-4" v-else v-html="mdInline(question.question.text)"/>
 
         <a @click="deleteQuestionConfirmation"><b-icon icon="delete" size="is-medium" /></a>
       </div>
@@ -411,6 +413,10 @@ export default {
 
     md (str) {
       return markdown.render(str)
+    },
+
+    mdInline (str) {
+      return markdown.renderInline(str)
     }
   },
 
@@ -449,6 +455,11 @@ article.question-editor
     > .control
       flex: 10
       margin: 0 .4rem
+
+    > .question-preview
+      flex: 10
+      align-self: center
+      margin: 0 .4rem 0 1rem
 
     > a
       align-self: center
