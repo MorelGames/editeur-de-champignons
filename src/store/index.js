@@ -13,7 +13,7 @@ const PREVIEWS = {
   // URL, without using external services.
   wikis: [
     ['wikipedia.org', 'Wikipédia'],
-    ['wiktionary.org', 'Wiktionnaire'],
+    ['wiktionary.org', 'le Wiktionnaire'],
     ['wikisource.org', 'Wikisource'],
     ['fandom.com', 'Fandom']
   ],

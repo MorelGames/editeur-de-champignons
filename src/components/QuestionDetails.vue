@@ -127,12 +127,18 @@
           </section>
 
           <section class="section">
-            <header class="titles">
-              <h3 class="title is-5">Sources</h3>
-              <p class="subtitle is-6">
-                Précisez ici les sources de la question, pour permettre aux joueurs⋅euses d'approfondir le sujet.
-              </p>
-            </header>
+            <div class="titles-with-button">
+              <header class="titles">
+                <h3 class="title is-5">Sources</h3>
+                <p class="subtitle is-6">
+                  Précisez ici les sources de la question, pour permettre aux joueurs⋅euses d'approfondir le sujet.
+                </p>
+              </header>
+
+              <a title="Prévisualiser automatiquement les liens" @click="previewSourceURLs(current_uuid)">
+                <b-icon icon="flash-red-eye" />
+              </a>
+            </div>
 
             <div class="content" v-if="preview" v-html="md(sources)"></div>
             <b-field v-else :message="['Chaque ligne sera affichée comme une source séparée, dans une liste. Markdown est supporté, ligne par ligne.', 'Les sources ne sont affichées que pendant la phase de correction, donc vous pouvez y révéler la réponse.']">
@@ -318,7 +324,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['newQuestion', 'updateQuestion', 'deleteQuestion']),
+    ...mapActions(['newQuestion', 'updateQuestion', 'deleteQuestion', 'previewSourceURLs']),
 
     filterKnownCategories (text) {
       this.known_categories_filtered = this.known_categories.filter(c => c.toLowerCase().indexOf(text.toLowerCase()) >= 0)
