@@ -41,16 +41,30 @@
             </div>
           </div>
         </b-dropdown-item>
+        <b-dropdown-item aria-role="listitem" @click="toggleAnswersVisible()">
+          <div class="media">
+            <b-icon class="media-left" icon="eye" v-if="answers"></b-icon>
+            <b-icon class="media-left" icon="eye-off" v-else></b-icon>
+
+            <div class="media-content">
+              <h3 v-if="!answers">Afficher les réponses</h3>
+              <h3 v-else>Masquer les réponses</h3>
+              <small>Masquez les réponses pour tester les questions…</small>
+            </div>
+          </div>
+        </b-dropdown-item>
       </b-dropdown>
     </aside>
   </header>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   computed: {
+    ...mapState(['answers']),
+
     preview: {
       get () {
         return this.$store.state.preview
@@ -62,7 +76,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['togglePreview']),
+    ...mapMutations(['togglePreview', 'toggleAnswersVisible']),
     ...mapActions(['exportQuestions', 'previewSourceURLs'])
   }
 }

@@ -33,7 +33,8 @@ export default new Vuex.Store({
   state: {
     file: {},
     current: undefined,
-    preview: false
+    preview: false,
+    answers: true
   },
   mutations: {
     load (state, file) {
@@ -77,6 +78,9 @@ export default new Vuex.Store({
     },
     togglePreview (state, preview) {
       state.preview = preview
+    },
+    toggleAnswersVisible (state) {
+      state.answers = !state.answers
     }
   },
   actions: {

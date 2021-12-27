@@ -220,7 +220,7 @@
                 d'importance : les réponses seront affichées mélangées.
               </b-field>
               <b-field v-for="(option, i) in question.answer.options" :key="i" grouped>
-                <b-checkbox v-model="option.valid" @input="update" />
+                <b-checkbox v-model="option.valid" @input="update" v-if="answersVisible" />
                 <b-input v-model="option.answer"
                          @input="update"
                          @keyup.enter.native="addQCMOption"
@@ -309,7 +309,8 @@ export default {
       current_uuid: state => state.current,
       question: state => state.file[state.current],
       known_categories: state => [...new Set(Object.values(state.file).map(question => question.categories).flat())],
-      preview: state => state.preview
+      preview: state => state.preview,
+      answersVisible: state => state.answers
     }),
 
     sources: {
