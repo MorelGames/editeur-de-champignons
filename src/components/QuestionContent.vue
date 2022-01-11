@@ -345,6 +345,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import "~bulma/sass/utilities/mixins"
+
 article.question-content-editor
   padding: 1rem
 
@@ -384,8 +386,15 @@ article.question-content-editor
       height: 5rem
       padding: .6rem
 
+      +mobile
+        width: 4rem
+        height: 4rem
+
     div.button-with-icon
       color: var(--color-gray-400)
+
+      +mobile
+        display: none
 
     button.button-with-icon
       border: dashed 1px var(--color-gray-400)
@@ -394,6 +403,9 @@ article.question-content-editor
       background-color: var(--color-gray-000)
       color: var(--color-gray-700)
       font-size: .95rem
+
+      +mobile
+        font-size: .85rem
 
       cursor: pointer
 
@@ -411,4 +423,8 @@ article.question-content-editor
 
       .icon
         color: var(--color-gray-400)
+
+        +mobile
+          i:before
+            font-size: 24px
 </style>

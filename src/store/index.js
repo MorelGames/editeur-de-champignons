@@ -43,6 +43,9 @@ export default new Vuex.Store({
     selectQuestion (state, uuid) {
       state.current = uuid
     },
+    unselectQuestion (state) {
+      state.current = undefined
+    },
     newQuestion (state) {
       const uuid = v4()
       const question = {

@@ -114,11 +114,18 @@ export default {
 </script>
 
 <style lang="sass">
+@import "~bulma/sass/utilities/mixins"
+
 nav
   min-width: 21rem
   width: 20%
 
   border-right: solid 4px var(--color-light-earth-300)
+
+  +mobile
+    width: 100%
+    min-width: unset
+    border: none
 
   > header
     display: flex
@@ -130,6 +137,12 @@ nav
     height: 3rem
 
     border-bottom: solid 3px var(--color-light-earth-300)
+
+    background-color: var(--color-white)
+
+    +mobile
+      position: sticky
+      top: 3rem
 
     h2
       flex: 10
@@ -159,8 +172,9 @@ nav
     margin: 0
     padding: .4rem
 
-    overflow-y: auto
-    overflow-x: hidden
+    +tablet
+      overflow-y: auto
+      overflow-x: hidden
 
     height: calc(100vh - 6rem)
 

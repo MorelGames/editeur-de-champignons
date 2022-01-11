@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <main>
+    <main :class="{'has-question': is_question_displayed}">
       <QuestionsList />
       <QuestionDetails />
     </main>
@@ -13,7 +13,7 @@ import Header from './components/Header.vue'
 import QuestionDetails from './components/QuestionDetails.vue'
 import QuestionsList from './components/QuestionsList.vue'
 
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -24,6 +24,10 @@ export default {
   },
 
   methods: mapActions(['loadFromBrowser', 'newQuestion']),
+
+  computed: mapState({
+    is_question_displayed: state => !!state.current
+  }),
 
   mounted () {
     this.$nextTick(this.loadFromBrowser)
@@ -45,11 +49,14 @@ export default {
 </script>
 
 <style lang="sass">
+@import "~bulma/sass/utilities/mixins"
+
 *
   box-sizing: border-box
 
 html
-  overflow-y: hidden !important
+  +tablet
+    overflow-y: hidden !important
 
 html, body, #app
   margin: 0
@@ -68,4 +75,16 @@ html, body, #app
     flex-direction: row
 
     height: calc(100vh - 2.99rem)
+
+    +mobile
+      display: block
+      height: auto
+
+      &.has-question
+        > nav
+          display: none
+
+      &:not(.has-question)
+        > article
+          display: none
 </style>

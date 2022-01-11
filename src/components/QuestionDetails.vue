@@ -445,6 +445,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import "~bulma/sass/utilities/mixins"
+
 article.question-editor
   width: 100%
   height: 100%
@@ -452,6 +454,12 @@ article.question-editor
   padding: 1rem
 
   overflow-y: auto
+
+  // Reverses columns order on mobile so the answers section is displayed first
+  +mobile
+    .columns
+      display: flex
+      flex-direction: column-reverse
 
   .level-single
     display: flex
@@ -463,6 +471,9 @@ article.question-editor
     > .control
       flex: 10
       margin: 0 .4rem
+
+      &:only-child
+        margin: 0
 
     > .question-preview
       flex: 10
@@ -478,6 +489,17 @@ article.question-editor
     .field.level-main
       flex: 10
 
+  +mobile
+    .dropdown-trigger
+      > button.button
+        // Remove texts & caret to gain space for the question input
+        > span:not(:first-child)
+          display: none
+        // Restores spacing
+        > span:first-child
+          margin-left: calc(-0.5em - 1px)
+          margin-right: calc(-0.5em - 1px)
+
   section.section
     background-color: var(--color-light-earth-0)
     border-radius: 6px
@@ -488,12 +510,21 @@ article.question-editor
     .titles
       margin-bottom: 1rem
 
+      +mobile
+        .title
+          font-size: 1.15rem
+        .subtitle
+          font-size: .95rem
+
     .titles-with-button
       display: flex
       flex-direction: row
 
       .titles
         flex: 10
+
+    .field
+      font-size: .95rem
 
   p.no-answer
     font-style: italic

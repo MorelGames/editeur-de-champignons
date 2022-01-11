@@ -1,8 +1,14 @@
 <template>
   <header class="header">
-    <h1>Éditeur de questions ⋅ Culture de champignons</h1>
+    <b-button icon-left="arrow-left" type="is-link" aria-label="Retour" v-if="is_question_displayed" @click="unselectQuestion"></b-button>
+
+    <h1><span>Éditeur de questions ⋅ </span>Shroom</h1>
+
     <aside>
-      <b-switch v-model="preview">Prévisualisation</b-switch>
+      <b-switch v-model="preview">
+        <span>Prévisualisation</span>
+        <b-icon icon="language-markdown" />
+      </b-switch>
       <b-dropdown aria-role="list" position="is-bottom-left">
         <template #trigger="{ active }">
           <b-button
@@ -64,6 +70,9 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   computed: {
     ...mapState(['answers']),
+    ...mapState({
+      is_question_displayed: state => !!state.current
+    }),
 
     preview: {
       get () {
@@ -76,17 +85,25 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['togglePreview', 'toggleAnswersVisible']),
+    ...mapMutations(['togglePreview', 'toggleAnswersVisible', 'unselectQuestion']),
     ...mapActions(['exportQuestions', 'previewSourceURLs'])
   }
 }
 </script>
 
 <style lang="sass">
+  @import "~bulma/sass/utilities/mixins"
+
   header.header
     display: flex
     flex-direction: row
     align-items: center
+
+    +mobile
+      position: sticky
+      top: 0
+      left: 0
+      z-index: 20
 
     height: 3rem
 
@@ -95,6 +112,9 @@ export default {
     border-bottom: solid 4px var(--color-light-earth-300)
     background-color: var(--color-light-earth-50)
 
+    > button
+      margin-right: .4rem
+
     h1
       flex: 10
       font-family: var(--family-display)
@@ -102,10 +122,25 @@ export default {
       font-style: normal
       font-size: 1.4rem
 
+      span
+        +mobile
+          display: none
+
     aside
       display: flex
       flex-direction: row
 
       .switch
         margin-right: 1rem
+
+    span.control-label
+      > span.icon
+        display: none
+
+      +mobile
+        > span:not(.icon)
+          display: none
+        > span.icon
+          display: flex
+          color: var(--color-light-earth-900)
 </style>
