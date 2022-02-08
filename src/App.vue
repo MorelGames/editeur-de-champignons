@@ -5,6 +5,7 @@
       <QuestionsList />
       <QuestionDetails />
     </main>
+    <ValidationModal />
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 import Header from './components/Header.vue'
 import QuestionDetails from './components/QuestionDetails.vue'
 import QuestionsList from './components/QuestionsList.vue'
+import ValidationModal from './components/ValidationModal.vue'
 
 import { mapState, mapActions } from 'vuex'
 
@@ -20,7 +22,8 @@ export default {
   components: {
     Header,
     QuestionsList,
-    QuestionDetails
+    QuestionDetails,
+    ValidationModal
   },
 
   methods: mapActions(['loadFromBrowser', 'newQuestion']),

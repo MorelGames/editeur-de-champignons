@@ -2,9 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { saveAs } from 'file-saver'
+import { Validator } from 'jsonschema'
 import { v4 } from 'uuid'
+import structuredClone from '@ungap/structured-clone'
 
 import { ToastProgrammatic as Toast } from 'buefy'
+
+import schema from '../../questions-catalog.schema.json'
 
 Vue.use(Vuex)
 
@@ -29,12 +33,44 @@ function persist (state) {
   localStorage.setItem('cdc-file', JSON.stringify(state.file))
 }
 
+/**
+ * Checks all questions in the file and try to fix common errors.
+ */
+function fixFileFormat (questions) {
+  for (const uuid in questions) {
+    questions[uuid] = fixQuestion(questions[uuid])
+  }
+
+  return questions
+}
+
+/**
+ * Checks the given question for common errors, and try to fix them.
+ *
+ * @param question The question to check.
+ * @returns {*} The fixed question
+ */
+function fixQuestion (question) {
+  // Ensures the duration is set to null or a number
+  question.duration = parseInt(question.duration)
+  if (isNaN(question.duration)) {
+    question.duration = null
+  }
+
+  return question
+}
+
 export default new Vuex.Store({
   state: {
     file: {},
     current: undefined,
     preview: false,
-    answers: true
+    answers: true,
+    validation: {
+      result: null,
+      why: null,
+      displayed: false
+    }
   },
   mutations: {
     load (state, file) {
@@ -84,6 +120,9 @@ export default new Vuex.Store({
     },
     toggleAnswersVisible (state) {
       state.answers = !state.answers
+    },
+    setSchemaValidation (state, validation) {
+      state.validation = validation
     }
   },
   actions: {
@@ -104,7 +143,7 @@ export default new Vuex.Store({
       persist(context.state)
     },
     updateQuestion (context, { uuid, question }) {
-      context.commit('updateQuestion', { uuid, question })
+      context.commit('updateQuestion', { uuid, question: fixQuestion(question) })
       persist(context.state)
     },
     deleteQuestion (context, uuid) {
@@ -212,15 +251,45 @@ export default new Vuex.Store({
       })
     },
 
-    exportQuestions ({ state }) {
-      const blob = new Blob(
-        [JSON.stringify(state.file)],
-        { type: 'application/json;charset=utf-8' }
-      )
+    validateQuestions ({ state, commit }, { why }) {
+      return new Promise((resolve, reject) => {
+        const v = new Validator()
+        const result = v.validate(state.file, schema, { nestedErrors: true, throwError: false })
 
-      saveAs(blob, 'questions.json')
+        if (result.valid) {
+          commit('setSchemaValidation', { result, why, displayed: false })
+          resolve(result)
+        } else {
+          commit('setSchemaValidation', { result, why, displayed: true })
+          reject(result)
+        }
+      })
+    },
+
+    fixFile ({ state, commit }) {
+      return new Promise((resolve, reject) => {
+        const file = fixFileFormat(state.file)
+        commit('load', file)
+        resolve()
+      })
+    },
+
+    exportQuestions ({ state, dispatch }) {
+      dispatch('fixFile').then(() => {
+        const file = structuredClone(state.file)
+
+        const blob = new Blob(
+          [JSON.stringify(file)],
+          { type: 'application/json;charset=utf-8' }
+        )
+
+        saveAs(blob, 'questions.json')
+
+        // We check if the schema is valid
+        dispatch('validateQuestions', { why: 'export' }).catch(() => {})
+      })
     }
   },
-  modules: {
-  }
+
+  modules: {}
 })

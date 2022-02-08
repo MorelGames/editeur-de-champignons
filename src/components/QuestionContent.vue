@@ -94,8 +94,9 @@
             <b-input type="text"
                      v-model="item.alt"
                      @input="update"
-                     placeholder="Texte alternatif (requis, si possible)"
+                     placeholder="Texte alternatif (requis)"
                      icon="eye-off"
+                     required
             />
           </b-field>
           <b-field>
