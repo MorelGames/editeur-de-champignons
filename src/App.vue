@@ -6,6 +6,7 @@
       <QuestionDetails />
     </main>
     <ValidationModal />
+    <ImportModal />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import Header from './components/Header.vue'
 import QuestionDetails from './components/QuestionDetails.vue'
 import QuestionsList from './components/QuestionsList.vue'
 import ValidationModal from './components/ValidationModal.vue'
+import ImportModal from './components/ImportModal.vue'
 
 import { mapState, mapActions } from 'vuex'
 
@@ -23,7 +25,8 @@ export default {
     Header,
     QuestionsList,
     QuestionDetails,
-    ValidationModal
+    ValidationModal,
+    ImportModal
   },
 
   methods: mapActions(['loadFromBrowser', 'newQuestion']),

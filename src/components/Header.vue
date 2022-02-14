@@ -19,12 +19,12 @@
             :icon-right="active ? 'menu-up' : 'menu-down'" />
         </template>
 
-        <b-dropdown-item aria-role="listitem" disabled>
+        <b-dropdown-item aria-role="listitem" @click="importing(true)">
           <div class="media">
             <b-icon class="media-left" icon="application-import"></b-icon>
             <div class="media-content">
-              <h3>Importer (à venir)</h3>
-              <small>Importer des questions depuis un fichier JSON</small>
+              <h3>Importer</h3>
+              <small>Importer des questions depuis un fichier JSON Shroom</small>
             </div>
           </div>
         </b-dropdown-item>
@@ -33,7 +33,7 @@
             <b-icon class="media-left" icon="application-export"></b-icon>
             <div class="media-content">
               <h3>Exporter</h3>
-              <small>Exporter les questions en JSON compatible avec le jeu</small>
+              <small>Exporter les questions en JSON compatible avec Shroom</small>
             </div>
           </div>
         </b-dropdown-item>
@@ -85,7 +85,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['togglePreview', 'toggleAnswersVisible', 'unselectQuestion']),
+    ...mapMutations(['togglePreview', 'toggleAnswersVisible', 'unselectQuestion', 'importing']),
     ...mapActions(['exportQuestions', 'previewSourceURLs'])
   }
 }

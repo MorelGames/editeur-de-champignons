@@ -60,6 +60,10 @@ function fixQuestion (question) {
   return question
 }
 
+export function validateQuestions (questionsFile) {
+  return new Validator().validate(questionsFile, schema, { nestedErrors: true, throwError: false })
+}
+
 export default new Vuex.Store({
   state: {
     file: {},
@@ -70,8 +74,10 @@ export default new Vuex.Store({
       result: null,
       why: null,
       displayed: false
-    }
+    },
+    importing: false
   },
+
   mutations: {
     load (state, file) {
       state.file = file
@@ -123,8 +129,12 @@ export default new Vuex.Store({
     },
     setSchemaValidation (state, validation) {
       state.validation = validation
+    },
+    importing (state, importing) {
+      state.importing = importing
     }
   },
+
   actions: {
     loadFromBrowser (context) {
       const local = localStorage.getItem('cdc-file')
@@ -149,6 +159,12 @@ export default new Vuex.Store({
     deleteQuestion (context, uuid) {
       context.commit('deleteQuestion', uuid)
       persist(context.state)
+    },
+    backup ({ state }) {
+      return new Promise((resolve, reject) => {
+        localStorage.setItem(`cdc-file-backup-${Date.now()}`, JSON.stringify(state.file))
+        resolve()
+      })
     },
 
     /**
@@ -251,10 +267,9 @@ export default new Vuex.Store({
       })
     },
 
-    validateQuestions ({ state, commit }, { why }) {
+    validateQuestions ({ state, commit }, { file, why }) {
       return new Promise((resolve, reject) => {
-        const v = new Validator()
-        const result = v.validate(state.file, schema, { nestedErrors: true, throwError: false })
+        const result = validateQuestions(file || state.file)
 
         if (result.valid) {
           commit('setSchemaValidation', { result, why, displayed: false })

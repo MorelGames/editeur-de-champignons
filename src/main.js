@@ -3,10 +3,10 @@ import App from './App.vue'
 import './registerServiceWorker'
 import store from './store'
 
-import { Button, Checkbox, Dialog, Dropdown, Field, Input, Icon, Modal, Rate, Select, Switch, Tag, Taginput, Toast } from 'buefy'
+import { Button, Checkbox, Dialog, Dropdown, Field, Input, Icon, Modal, Radio, Rate, Select, Switch, Tag, Taginput, Toast, Upload } from 'buefy'
 import './sass/base.sass'
 
-[Button, Checkbox, Dialog, Dropdown, Field, Input, Icon, Modal, Rate, Select, Switch, Tag, Taginput, Toast].forEach(p => Vue.use(p))
+[Button, Checkbox, Dialog, Dropdown, Field, Input, Icon, Modal, Radio, Rate, Select, Switch, Tag, Taginput, Toast, Upload].forEach(p => Vue.use(p))
 
 Vue.config.productionTip = false
 
